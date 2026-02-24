@@ -15,7 +15,7 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
-    # ✅ All terraform commands will run from iac/
+    # ✅ All terraform commands run from iac/
     defaults:
       run:
         working-directory: iac
@@ -24,13 +24,6 @@ jobs:
       # 1️⃣ Checkout repository
       - name: Checkout code
         uses: actions/checkout@v3
-
-        # 🔹 Step 1: Create ZIP
-      - name: Zip Lambda
-        run: |
-          cd src/lambda
-          zip -r lambda.zip .
-          ls -la   # optional debug
 
       # 2️⃣ Setup Terraform
       - name: Setup Terraform
@@ -46,12 +39,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # 4️⃣ Build Lambda package
+      # 4️⃣ Build Lambda ZIP directly inside iac/
       - name: Build Lambda package
         run: |
-          cd ../src/lambda
-          zip -r lambda.zip .
-          mv lambda.zip ../../iac/
+          zip -j lambda.zip ../src/lambda/lambda.py
+          ls -la
 
       # 5️⃣ Terraform Init
       - name: Terraform Init
