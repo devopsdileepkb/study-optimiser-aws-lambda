@@ -3,60 +3,67 @@ name: Terraform Deploy
 on:
   push:
     branches:
-      - main   # Run automatically on pushes to main
+      - main
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy (dev, sit, ppt, prd)'
+        description: "Environment to deploy (dev, sit, ppt, prd)"
         required: true
-        default: 'dev'
+        default: "dev"
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
 
+    # ✅ All terraform commands will run from iac/
+    defaults:
+      run:
+        working-directory: iac
+
     steps:
-      # 1. Checkout repository
+      # 1️⃣ Checkout repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Setup Terraform
+      # 2️⃣ Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.6.6
 
-      # 3. Configure AWS credentials (stored in GitHub Secrets)
+      # 3️⃣ Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1   # Matches your dev.tfvars region
+          aws-region: us-east-1
 
-      # 4. Initialize Terraform
-      - name: Terraform Init
-        working-directory: ./iac
-        run: terraform init
-        
-      # 5. Build Lambda package
+      # 4️⃣ Build Lambda package
       - name: Build Lambda package
         run: |
-          cd src/lambda
+          cd ../src/lambda
           zip -r lambda.zip .
+          mv lambda.zip ../../iac/
 
-      # 6. Validate Terraform
+      # 5️⃣ Terraform Init
+      - name: Terraform Init
+        run: terraform init
+
+      # 6️⃣ Terraform Validate
       - name: Terraform Validate
-        working-directory: ./iac
         run: terraform validate
 
-        # 7. Plan Terraform
+      # 7️⃣ Terraform Plan
       - name: Terraform Plan
-        working-directory: ./iac
-        run: terraform plan -var-file="environment/${{ github.event.inputs.environment }}.tfvars"
+        run: |
+          terraform plan \
+          -var-file="environment/${{ github.event.inputs.environment || 'dev' }}.tfvars"
 
-      # 8. Apply Terraform (auto-approve for CI/CD)
+      # 8️⃣ Terraform Apply (only on main branch)
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        working-directory: ./iac
-        run: terraform apply -var-file="environment/${{ github.event.inputs.environment }}.tfvars" -auto-approve
+        run: |
+          terraform apply \
+          -var-file="environment/${{ github.event.inputs.environment || 'dev' }}.tfvars" \
+          -auto-approve
