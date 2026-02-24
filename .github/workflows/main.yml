@@ -25,6 +25,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+        # 🔹 Step 1: Create ZIP
+      - name: Zip Lambda
+        run: |
+          cd src/lambda
+          zip -r lambda.zip .
+          ls -la   # optional debug
+
       # 2️⃣ Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
