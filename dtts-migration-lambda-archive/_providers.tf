@@ -9,7 +9,7 @@ terraform {
 
   backend "s3" {
     /* https://developer.hashicorp.com/terraform/language/settings/backends/configuration */
-    region       = "eu-west-1"
+    region       = "us-east-1"
     use_lockfile = true
   }
 }
@@ -34,4 +34,5 @@ provider "aws" {
       #repository        = "${{ values.destination }}"          # Repository hosting the IAC and code for this resource.
     }
   }
+
 }
