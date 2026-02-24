@@ -27,27 +27,29 @@ module "iam_policy" {
     policy_name = var.policy_name
     policy_description = var.policy_description
     policy_statements = [
-    {
-      "Sid": "Statement1",
-      "Effect": "Allow",
-      "Action": [
-        "kms:ListKeys",
-        "kms:DescribeKey",
-        "kms:Encrypt",
-        "kms:Decrypt",
-        "kms:GenerateDataKey",
-        "kms:GenerateDataKeyPair"
-      ],
-      "Resource": "${module.kms.kms_key_arn}"
-
-    },
-    {
-      "Sid": "Statement2",
-      "Effect": "Allow",
-      "Action": "logs:*",
-      "Resource": "${module.cloudwatch_log_group.log_group_arn}"
-          }
-  ]
+  {
+    Sid    = "Statement1"
+    Effect = "Allow"
+    Action = [
+      "kms:ListKeys",
+      "kms:DescribeKey",
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:GenerateDataKey",
+      "kms:GenerateDataKeyPair"
+    ]
+    Resource = module.kms.kms_key_arn
+  },
+  {
+    Sid    = "Statement2"
+    Effect = "Allow"
+    Action = [
+      "logs:*"
+    ]
+    Resource = module.cloudwatch_log_group.log_group_arn
+  }
+]
+    
     tags = var.tags
   
 }
