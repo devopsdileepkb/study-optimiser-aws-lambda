@@ -71,14 +71,14 @@ module "iam_policy_sts" {
 
 
 module "role_policy_attachment" {
-    source = "../modules/iam_role_policy_attachment"
+    source = "../modules/role_policy_attachment"
     iam_role_name = "${module.iam_role.role_name}"
     role_policy_arn = "${module.iam_policy.iam_policy_arn}"
 
 
 }
 module "role_policy_attachment_lambda_execution" {
-    source = "../modules/iam_role_policy_attachment"
+    source = "../modules/role_policy_attachment"
     iam_role_name = "${module.iam_role.role_name}"
     role_policy_arn = "arn:aws:iam::policy/service-role/AWSLambdaBasicExecutionRole"
 
