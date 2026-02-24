@@ -5,7 +5,7 @@ resource "aws_lambda_function" "zip_csv_lambda" {
   package_type  = "Zip"
 
   filename         = var.filename
-  source_code_hash = filebase64sha256(var.filename)
+  source_code_hash = var.filename != null ? filebase64sha256(var.filename) : null
   handler          = var.handler
   runtime          = var.runtime
 
