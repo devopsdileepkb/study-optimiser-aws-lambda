@@ -55,20 +55,20 @@ module "iam_policy" {
 }
 
 module "iam_policy_sts" {
-    source = "../modules/iam_policy"
-    policy_name = var.policy_name
-    policy_description = var.policy_description
-    policy_statements = [
-    {
-      "Sid": "Statement1",
-      "Effect": "Allow",
-      "Action": "sts:AssumeRole"
-      "Resource": var.crossaccount_role_arn
+  source             = "../modules/iam_policy"
+  policy_name        = var.policy_name
+  policy_description = var.policy_description
 
+  policy_statements = [
+    {
+      Sid    = "Statement1"
+      Effect = "Allow"
+      Action = ["sts:AssumeRole"]
+      Resource = var.crossaccount_role_arn
     }
-     ]
-    tags = var.tags
-  
+  ]
+
+  tags = var.tags
 }
 
 
@@ -108,3 +108,4 @@ module "lambda_trigger" {
     event_bridge_rule_name = var.event_bridge_rule_name
     lambda_function_name = module.lambda_function.lambda_name
 }
+
