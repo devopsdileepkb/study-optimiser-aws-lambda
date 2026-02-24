@@ -97,7 +97,7 @@ module "lambda_function" {
     cloudwatch_log_group_name = module.cloudwatch_log_group.log_group_name
     environment_variables = var.environment_variables
     filename = "${path.root}/src/lambda/lambda.zip"
-    handler  = "index.handler"
+    handler  = "lambda.handler"
     runtime  = "python3.11"
  
 }
