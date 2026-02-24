@@ -82,7 +82,7 @@ module "role_policy_attachment" {
 module "role_policy_attachment_lambda_execution" {
     source = "../modules/iam_role_policy_attachment"
     iam_role_name = "${module.iam_role.role_name}"
-    role_policy_arn = "arn:aws:iam::policy/service-role/AWSLambdaBasicExecutionRole"
+    role_policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 
 }
 

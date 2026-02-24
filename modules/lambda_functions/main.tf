@@ -7,8 +7,8 @@ resource "aws_lambda_function" "zip_csv_lambda" {
   #zip specific
 
   filename                       = var.package_type == "Zip" ? var.filename : null
-  source_code_hash = var.package_type == "zip" && var.filename !=null ? filebase64sha256(var.filename) : null
-  handler = var.package_type == "zip" ? var.handler : null
+  source_code_hash = var.package_type == "Zip" && var.filename !=null ? filebase64sha256(var.filename) : null
+  handler = var.package_type == "Zip" ? var.handler : null
   runtime = var.package_type == "Zip" ? var.runtime : null
 
   #image specific
